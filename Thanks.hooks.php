@@ -148,6 +148,23 @@ class ThanksHooks {
 			'icon' => 'thanks',
 		);
 
+		$notifications['flow-thank'] = array(
+			'primary-link' => array ( 'message' => 'notification-link-text-view-post', 'destination' => 'post' ),
+			'category' => 'edit-thank',
+			'group' => 'positive',
+			'formatter-class' => 'EchoThanksFormatter',
+			'title-message' => 'notification-thanks',
+			'title-params' => array( 'agent', 'postlink', 'title' ),
+			'flyout-message' => 'notification-thanks-flow-flyout',
+			'flyout-params' => array( 'agent', 'title' ),
+			'payload' => array( 'summary' ),
+			'email-subject-message' => 'notification-thanks-flow-email-subject',
+			'email-subject-params' => array( 'agent' ),
+			'email-body-batch-message' => 'notification-thanks-flow-email-batch-body',
+			'email-body-batch-params' => array( 'agent', 'title' ),
+			'icon' => 'thanks',
+		);
+
 		$icons['thanks'] = array(
 			'path' => 'Thanks/ThankYou.png',
 		);
@@ -164,6 +181,7 @@ class ThanksHooks {
 	public static function onEchoGetDefaultNotifiedUsers( $event, &$users ) {
 		switch ( $event->getType() ) {
 			case 'edit-thank':
+			case 'flow-thank':
 				$extra = $event->getExtra();
 				if ( !$extra || !isset( $extra['thanked-user-id'] ) ) {
 					break;
