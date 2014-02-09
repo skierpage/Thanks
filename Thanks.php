@@ -44,6 +44,7 @@ $dir = __DIR__;
 $wgAutoloadClasses['ThanksHooks'] = $dir . '/Thanks.hooks.php';
 $wgAutoloadClasses['EchoThanksFormatter'] = $dir . '/ThanksFormatter.php';
 $wgAutoloadClasses['ApiThank'] = $dir . '/ApiThank.php';
+$wgAutoloadClasses['ApiFlowThank'] = $dir . '/ApiFlowThank.php';
 $wgAutoloadClasses['ThanksLogFormatter'] = $dir . '/ThanksLogFormatter.php';
 $wgAutoloadClasses['SpecialThanks'] = $dir . '/SpecialThanks.php';
 $wgExtensionMessagesFiles['Thanks'] = $dir . '/Thanks.i18n.php';
@@ -52,6 +53,7 @@ $wgExtensionMessagesFiles['ThanksAlias'] = $dir . '/Thanks.alias.php';
 
 // Register APIs
 $wgAPIModules['thank'] = 'ApiThank';
+$wgAPIModules['flow-thank'] = 'ApiFlowThank';
 
 // Register special page
 $wgSpecialPages['Thanks'] = 'SpecialThanks';
