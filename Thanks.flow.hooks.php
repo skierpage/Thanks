@@ -83,7 +83,7 @@ class ThanksFlowHooks {
 				'title' => $tooltip,
 				'data-post-id' => $rev->getPostId(),
 				'data-workflow-id' => $topic->getPostId(),
-				'data-creator-id' => $topic->getCreatorId(),
+				'data-creator-id' => $rev->getCreatorId(),
 				'data-topic-title' => $topic->getContent( 'wikitext '),
 				'data-title' => $title
 			),
