@@ -14,11 +14,11 @@ class ApiFlowThank extends ApiBase {
 
 		$params = $this->extractRequestParams();
 
-		$post = params['post-id'];
+		$post = $params['post-id'];
 		if ( $this->userAlreadySentThanksForPost( $user, $post ) ) {
 			$this->markResultSuccess();
 		} else {
-			$recipient = getRecipientFromParams( $params );
+			$recipient = $this->getRecipientFromParams( $params );
 			$this->dieOnBadRecipient( $user, $recipient );
 			$this->sendThanks(
 				$user,
@@ -26,7 +26,7 @@ class ApiFlowThank extends ApiBase {
 				$post,
 				$params['workflow'],
 				$params['topic-title'],
-				$params['title'],
+				$params['title']
 			);
 		}
 	}
@@ -37,7 +37,7 @@ class ApiFlowThank extends ApiBase {
 		}
 	}
 
-	private function userAlreadySentThanksForPost( User $user, string $post ) {
+	private function userAlreadySentThanksForPost( User $user, $post ) {
 		return $user->getRequest()->getSessionData( "thanks-thanked-{$post}" );
 	}
 
@@ -48,8 +48,8 @@ class ApiFlowThank extends ApiBase {
 	}
 
 	private function getRecipientFromParams( $params ) {
-		$recipient = User::newFromId( $params['recipient'] )->loadFromId();
-		if (!$recipient) {
+		$recipient = User::newFromId( $params['recipient'] );
+		if (!$recipient->loadFromId()) {
 			$this->dieUsage( 'Recipient is invalid', 'invalidrecipient' );
 		}
 		return $recipient;
@@ -76,19 +76,17 @@ class ApiFlowThank extends ApiBase {
 		}
 	}
 
-	private function sendThanks( User $user, User $recipient, string $post, string $workflow,
-	string $topicTitle, string $title ) {
+	private function sendThanks( User $user, User $recipient, $post, $workflow, $topicTitle, $title ) {
 		global $wgThanksLogging;
 		// Create the notification via Echo extension
 		EchoEvent::create( array(
 			'type' => 'flow-thank',
-			'title' => $title,
+			'title' => Title::newFromText( $title ),
 			'extra' => array(
 				'post-id' => $post,
 				'workflow' => $workflow,
 				'thanked-user-id' => $recipient->getId(),
 				'topic-title' => $topicTitle,
-				'title' => $title,
 			),
 			'agent' => $user,
 		) );
