@@ -42,8 +42,10 @@ $dir = __DIR__;
 
 // Register files
 $wgAutoloadClasses['ThanksHooks'] = $dir . '/Thanks.hooks.php';
+$wgAutoloadClasses['ThanksFlowHooks'] = $dir . '/Thanks.flow.hooks.php';
 $wgAutoloadClasses['EchoThanksFormatter'] = $dir . '/ThanksFormatter.php';
 $wgAutoloadClasses['ApiThank'] = $dir . '/ApiThank.php';
+$wgAutoloadClasses['ApiFlowThank'] = $dir . '/ApiFlowThank.php';
 $wgAutoloadClasses['ThanksLogFormatter'] = $dir . '/ThanksLogFormatter.php';
 $wgAutoloadClasses['SpecialThanks'] = $dir . '/SpecialThanks.php';
 $wgExtensionMessagesFiles['Thanks'] = $dir . '/Thanks.i18n.php';
@@ -52,6 +54,7 @@ $wgExtensionMessagesFiles['ThanksAlias'] = $dir . '/Thanks.alias.php';
 
 // Register APIs
 $wgAPIModules['thank'] = 'ApiThank';
+$wgAPIModules['flowThank'] = 'ApiFlowThank';
 
 // Register special page
 $wgSpecialPages['Thanks'] = 'SpecialThanks';
@@ -68,6 +71,8 @@ $wgHooks['BeforeSpecialMobileDiffDisplay'][] = 'ThanksHooks::onBeforeSpecialMobi
 $wgHooks['UnitTestsList'][] = 'ThanksHooks::registerUnitTests';
 $wgHooks['GetLogTypesOnUser'][] = 'ThanksHooks::onGetLogTypesOnUser';
 
+$wgHooks['FlowAddPostInteractionLinks'][] = 'ThanksFlowHooks::onFlowAddPostInteractionLinks';
+$wgHooks['FlowRegisterModules'][] = 'ThanksFlowHooks::onFlowRegisterModules';
 // Register modules
 $wgResourceModules['ext.thanks'] = array(
 	'scripts' => array(
@@ -75,6 +80,7 @@ $wgResourceModules['ext.thanks'] = array(
 	),
 	'messages' => array(
 		'thanks-thanked',
+		'thanks-button-thanked',
 		'thanks-error-undefined',
 		'thanks-error-invalidrevision',
 		'thanks-error-ratelimited',
