@@ -67,7 +67,7 @@
 		} );
 		$dialog.dialog( 'open' );
 	};
-	
+
 	var sendThanks = function( $thankLink ) {
 		var source;
 		if ( mw.config.get( 'wgAction' ) === 'history' ) {
@@ -118,5 +118,52 @@
 			sendThanks( $thankLink );
 		}
 	} );
+
+	$( 'a.mw-thanks-flow-thank-link' ).click( function( e ) {
+		var $thankLink = $( this );
+		e.preventDefault();
+		if ( !$thankLink.hasClass( 'mw-thanks-flow-thanked' ) ) {
+			sendFlowThanks( $thankLink );
+		}
+	} );
+
+	var sendFlowThanks = function( $thankLink ) {
+		var source;
+		if ( mw.config.get( 'wgAction' ) === 'history' ) {
+			source = 'history';
+		} else {
+			source = 'diff';
+		}
+		( new mw.Api ).get( {
+			'action' : 'flow-thank',
+			'post-id' : $thankLink.attr( 'data-post-id' ),
+			'workflow' : $thankLink.attr( 'data-workflow-id' ),
+			'recipient' : $thankLink.attr( 'data-creator-id' ),
+			'topic-title' : $thankLink.attr( 'data-topic-title' ),
+			'title' : $thankLink.attr( 'data-title' ),
+			'token' : mw.user.tokens.values.editToken
+		} )
+		.done( function( data ) {
+			$thankLink
+				.text( mw.message( 'thanks-button-thanked', mw.user ).text() )
+				.removeClass( 'mw-thanks-flow-thank-link' )
+				.addClass( 'mw-thanks-flow-thanked' );
+
+			thanked.push( $thankLink );
+		} )
+		.fail( function( errorCode, details ) {
+			// TODO: use something besides alert for the error messages
+			switch( errorCode ) {
+				case 'invalidrevision':
+					alert( mw.msg( 'thanks-error-invalidrevision' ) );
+					break;
+				case 'ratelimited':
+					alert( mw.msg( 'thanks-error-ratelimited', mw.user ) );
+					break;
+				default:
+					alert( mw.msg( 'thanks-error-undefined' ) );
+			}
+		} );
+	};
 
 } )( jQuery, mediaWiki );
